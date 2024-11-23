@@ -56,7 +56,7 @@ export default class User {
 }
 
     public async createUser(user: UserSchema):Promise<PrismaUser | null>{ 
-        console.log(user)
+       
         const hashedPassword = this.hashPassword(user.password); 
         const newUser = await prisma.users.create({ 
             data: { 
