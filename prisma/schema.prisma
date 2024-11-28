@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
 datasource db {
@@ -11,11 +12,40 @@ model users {
   id            Int       @id @default(autoincrement())
   username      String    @unique(map: "username") @db.VarChar(50)
   email         String    @unique(map: "email") @db.VarChar(100)
-  password_hash String    @db.VarChar(255)
+  password_hash String    @db.VarChar(500)
   created_at    DateTime? @default(now()) @db.Timestamp(0)
   updated_at    DateTime? @default(now()) @db.Timestamp(0)
   firstname     String    @db.VarChar(45)
   lastname      String    @db.VarChar(45)
+  role          String?   @db.VarChar(45)
+}
 
-  @@unique([email, username])
+model Applications {
+  application_ID Int     @id @default(autoincrement())
+  user_ID        Int?
+  job_ID         Int?
+  date_created   String? @db.VarChar(45)
+  status         String? @db.VarChar(45)
+}
+
+model Jobs {
+  job_ID             Int       @id @default(autoincrement())
+  job_title          String    @db.VarChar(45)
+  job_company        String    @db.VarChar(255)
+  job_location       String    @db.VarChar(100)
+  job_description    String?   @db.VarChar(500)
+  job_posting_date   DateTime? @db.Date
+  job_posting_url    String?   @db.VarChar(500)
+  job_salary         Int?
+  db_created_on_date DateTime? @db.Date
+}
+
+model applications_settings {
+  user_settings_id     Int       @id
+  user_id              String    @db.VarChar(500)
+  resume_file_name     String?   @db.VarChar(45)
+  desired_posting_date DateTime? @db.Date
+  targeted_roles       String?   @db.VarChar(500)
+  resume_tailoring     String?   @db.VarChar(3)
+  desired_location     String?   @db.VarChar(100)
 }
