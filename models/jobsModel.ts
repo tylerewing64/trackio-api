@@ -14,13 +14,14 @@ export interface JobSchema {
 export default class Job{ 
 
     public async createJob(job_obj: JobSchema):Promise<PrismaJobs | null> { 
+        
         const job = await prisma.jobs.create({ 
             data: { 
                 job_title: job_obj.job_title, 
                 job_company: job_obj.job_company, 
                 job_location: job_obj.job_location, 
                 job_description: job_obj.job_description, 
-                job_posting_date: new Date(job_obj.job_posting_date).toISOString(), 
+                job_posting_date: job_obj.job_posting_date ?  new Date(job_obj.job_posting_date).toISOString() : null, 
                 job_posting_url: job_obj.job_posting_url, 
                 job_salary: job_obj.job_salary
             }

@@ -21,10 +21,11 @@ export default class User {
         return hashedString;
     }
 
-    public async authorizeUser(username: string, password: string): Promise<string | null> { // Change return type to string | null
+    public async authorizeUser(username: string, password: string): Promise<object | null> { // Change return type to string | null
     try { 
         const hashedPassword = this.hashPassword(password); 
         const user = await prisma.users.findFirst({ 
+           
             where: { 
                 username: username
             }
@@ -44,7 +45,13 @@ export default class User {
             };
             // Create the JWT token
             const token = jwt.sign(payload, secretKey, options);
-            return token; 
+            return {
+                token,
+                id: user.id,
+                firstname: user.firstname,
+                lastname: user.lastname
+            };
+            
         }
 
         // Return null if passwords don't match

@@ -1,4 +1,5 @@
 import { PrismaClient, Applications as PrismaApplications } from "@prisma/client";
+import { getDefaultAutoSelectFamilyAttemptTimeout } from "net";
 const prisma = new PrismaClient();
 
 interface ApplicationSchema{ 
@@ -46,8 +47,45 @@ export default class Application{
         })
     }
 
-    public async getApplication(){ 
+    public async getApplications(filter: string, searchTerm: string, user_id: number){ 
 
+        const whereClause: any = {
+            user_ID:user_id
+        };
+  
+        if (filter && searchTerm) {
+            whereClause.job = {
+                [filter]: {
+                    contains: searchTerm
+                   
+                },
+            };
+        }
+
+        const getFiteredApplications = await prisma.applications.findMany({ 
+           where : whereClause, 
+           include:{ 
+            job:true
+           }
+           
+        })
+        return getFiteredApplications;
+            
     }
+
+    public async getAllApplicationsByUserID(user_id: number){ 
+        const getAllApplicationsByUserID = await prisma.applications.findMany({ 
+            where: { 
+                user_ID: user_id
+            }, 
+            include: { 
+                job:true
+            }
+        })
+
+        return getAllApplicationsByUserID;
+    }
+
+
 
 }

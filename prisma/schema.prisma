@@ -23,9 +23,10 @@ model users {
 model Applications {
   application_ID Int     @id @default(autoincrement())
   user_ID        Int?
-  job_ID         Int?
+  job_ID         Int 
   date_created   String? @db.VarChar(45)
   status         String? @db.VarChar(45)
+  job            Jobs?   @relation(fields:[job_ID], references: [job_ID])
 }
 
 model Jobs {
@@ -38,11 +39,12 @@ model Jobs {
   job_posting_url    String?   @db.VarChar(500)
   job_salary         Int?
   db_created_on_date DateTime? @db.Date
+  applications       Applications[]
 }
 
 model applications_settings {
   user_settings_id     Int       @id
-  user_id              String    @db.VarChar(500)
+  user_id              Int       @db.Int()
   resume_file_name     String?   @db.VarChar(45)
   desired_posting_date DateTime? @db.Date
   targeted_roles       String?   @db.VarChar(500)
